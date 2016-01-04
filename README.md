@@ -37,3 +37,7 @@ A resource designed to create ssh public_keys, private_keys as well as ssh comma
 
 A system / shell group account which wraps around the `group` builtin resource.
 
+# TODO
+
+- better integration of openssh AllowGroups
+
