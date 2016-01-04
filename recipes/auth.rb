@@ -4,12 +4,12 @@
 # - config: items that are set to be managed 
 #
 user_queue = [
-  node[:common][:auth][:users][:managed].keys,
+  node[:common][:auth][:users][:managed],
   node[:common][:auth][:users][:config].keys
 ].flatten.compact.uniq
 
 group_queue = [
-  node[:common][:auth][:groups][:managed].keys,
+  node[:common][:auth][:groups][:managed],
   node[:common][:auth][:groups][:config].keys
 ].flatten.compact.uniq
 
