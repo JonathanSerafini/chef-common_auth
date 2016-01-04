@@ -41,11 +41,11 @@ property :keys,
 
 property :manage_home,
   kind_of: [TrueClass, FalseClass],
-  default: True
+  default: true
 
 property :manage_keys,
   kind_of: [TrueClass, FalseClass],
-  default: True
+  default: true
 
 action :create do
   node.set[:common][:auth][:users][:managed][name] = true
