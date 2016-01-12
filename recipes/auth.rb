@@ -26,7 +26,7 @@ groups = search(node[:common][:auth][:groups][:data_bag], "*").map do |item|
                 when TrueClass
                   { "action" => "create" }
                 when FalseClass
-                  { "action" => "delete" }
+                  { "action" => "remove" }
                 end
     item = Chef::Mixin::DeepMerge.merge(item, override)
   else nil
@@ -55,7 +55,7 @@ users = search(node[:common][:auth][:users][:data_bag], "*").map do |item|
                 when TrueClass
                   { "action" => "create" }
                 when FalseClass
-                  { "action" => "delete" }
+                  { "action" => "remove" }
                 end
     item = Chef::Mixin::DeepMerge.merge(item, override)
   else nil

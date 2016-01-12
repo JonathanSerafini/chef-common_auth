@@ -29,7 +29,7 @@ action :create do
   end
 
   sudo name do
-    load_properties(sudoers)
+    load_properties(sudoer)
     action :nothing if sudoer.empty?
   end
 end
@@ -49,4 +49,3 @@ action :remove do
     action :remove
   end
 end
-
