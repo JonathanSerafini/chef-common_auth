@@ -20,3 +20,9 @@ default[:openssh][:server].tap do |server|
   server[:allow_groups] = Array.new
 end
 
+default[:openssh][:client].tap do |client|
+  client.delete(:host)
+  # OpenSSH CVE-2016-0777
+  client["*"][:use_roaming] = "no"
+end
+
