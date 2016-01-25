@@ -6,6 +6,7 @@ description 'Installs/Configures chef_common_auth'
 long_description 'Installs/Configures chef_common_auth'
 version '0.1.1'
 
-depends 'common_utils' # DataBagItem.namespaced support
+#depends 'common_core'  # Install SecureBag gem
+depends 'common_utils' # DataBagItem.common_namespaced support
 depends 'sudo'
 depends 'openssh'

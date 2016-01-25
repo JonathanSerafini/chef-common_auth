@@ -50,22 +50,22 @@ property :manage_keys,
 action :create do
   node.set[:common][:auth][:users][:managed][name] = true
 
-  user name do
-    uid     uid
-    gid     gid
-    home    home
-    shell   shell
-    comment comment
-    password password
-    manage_home manage_home
+  user new_resource.name do
+    uid       new_resource.uid
+    gid       new_resource.gid
+    home      new_resource.home
+    shell     new_resource.shell
+    comment   new_resource.comment
+    password  new_resource.password
+    manage_home new_resource.manage_home
   end
-
-  user_keys name do
-    owner name
-    group name
-    home  home
-    load_properties(keys)
-    only_if { manage_keys }
+  
+  user_keys new_resource.name do
+    owner new_resource.name
+    group new_resource.name
+    home  new_resource.home
+    load_properties(new_resource.keys)
+    only_if { new_resource.manage_keys }
   end
 end
 
@@ -76,7 +76,7 @@ action :remove do
     node.normal[:common][:auth][:users][:managed].delete(name)
   end
 
-  user name do
+  user new_resource.name do
     action :remove
   end
 end
@@ -84,7 +84,7 @@ end
 action :lock do
   node.set[:common][:auth][:users][:managed][name] = true
 
-  user name do
+  user new_resource.name do
     action :lock
   end
 end

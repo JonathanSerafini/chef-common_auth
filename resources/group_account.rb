@@ -14,6 +14,10 @@ property :members,
   kind_of: Array,
   default: Array.new
 
+property :require_members,
+  kind_of: [TrueClass, FalseClass],
+  default: true
+
 property :sudoer,
   kind_of: Hash,
   default: Hash.new
@@ -22,6 +26,13 @@ action :create do
   # Register this managed group to support deletions
   #
   node.set[:common][:auth][:groups][:managed][name] = true
+
+  if new_resource.require_members
+    new_resource.members.each do |member|
+      next if node[:etc][:passwd].keys.include?(member)
+      raise ArgumentError.new "This group requires the presence of #{member}"
+    end
+  end
 
   group name do
     gid gid
