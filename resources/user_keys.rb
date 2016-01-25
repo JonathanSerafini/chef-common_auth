@@ -24,37 +24,37 @@ property :private_keys,
   default: Hash.new
 
 action :create do
-  directory "#{home}/.ssh" do
-    owner owner
-    group group
+  directory "#{new_resource.home}/.ssh" do
+    owner new_resource.owner
+    group new_resource.group
     mode  0700
   end
 
-  template "#{home}/.ssh/authorized_keys2" do
-    owner owner
-    group group
+  template "#{new_resource.home}/.ssh/authorized_keys2" do
+    owner new_resource.owner
+    group new_resource.group
     mode  0600
     variables(
-      public_keys: public_keys
+      public_keys: new_resource.public_keys
     )
   end
 
   private_keys.each do |name, key|
-    file "#{home}/.ssh/#{name}.rsa" do
-      owner owner
-      group group
+    file "#{new_resource.home}/.ssh/#{new_resource.name}.rsa" do
+      owner new_resource.owner
+      group new_resource.group
       mode  0600
       sensitive true
-      content key
+      content new_resource.key
     end
 
-    file "#{home}/.ssh/#{name}.cmd" do
-      owner owner
-      group group
+    file "#{new_resource.home}/.ssh/#{new_resource.name}.cmd" do
+      owner new_resource.owner
+      group new_resource.group
       mode  0700
       content "#!/bin/sh exec \
         /usr/bin/ssh \
-          -i #{home}/.ssh/#{name}.rsa 
+          -i #{new_resource.home}/.ssh/#{new_resource.name}.rsa 
           -o \"StrictHostKeyChecking=no\" \
           \"$@\"
       "
@@ -63,16 +63,16 @@ action :create do
 end
 
 action :delete do
-  template "#{home}/.ssh/authorized_keys2" do
+  template "#{new_resource.home}/.ssh/authorized_keys2" do
     action :delete
   end
 
   private_keys.keys.each do |name|
-    file "#{home}/.ssh/#{name}.rsa" do
+    file "#{new_resource.home}/.ssh/#{new_resource.name}.rsa" do
       action :delete
     end
 
-    file "#{home}/.ssh/#{name}.cmd" do
+    file "#{new_resource.home}/.ssh/#{new_resource.name}.cmd" do
       action :delete
     end
   end
