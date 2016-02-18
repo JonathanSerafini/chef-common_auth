@@ -24,13 +24,13 @@ property :home,
   kind_of:  String,
   identity: true,
   default:  lazy { |r| 
-    ::File.join(node[:common][:auth][:users][:defaults][:home], "#{r.name}")
+    ::File.join(node[:common_auth][:users][:defaults][:home], "#{r.name}")
   }
 
 property :shell,
   kind_of:  String,
   identity: true,
-  default:  lazy { node[:common][:auth][:users][:defaults][:shell] }
+  default:  lazy { node[:common_auth][:users][:defaults][:shell] }
 
 property :password,
   kind_of:  String,
@@ -48,7 +48,7 @@ property :manage_keys,
   default: true
 
 action :create do
-  node.set[:common][:auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][name] = true
 
   user new_resource.name do
     uid       new_resource.uid
@@ -71,9 +71,9 @@ end
 
 action :remove do
   if node[:etc][:passwd][name]
-    node.set[:common][:auth][:users][:managed][name] = false
+    node.set[:common_auth][:users][:managed][name] = false
   else
-    node.normal[:common][:auth][:users][:managed].delete(name)
+    node.normal[:common_auth][:users][:managed].delete(name)
   end
 
   user new_resource.name do
@@ -82,7 +82,7 @@ action :remove do
 end
 
 action :lock do
-  node.set[:common][:auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][name] = true
 
   user new_resource.name do
     action :lock
@@ -90,7 +90,7 @@ action :lock do
 end
 
 action :unlock do
-  node.set[:common][:auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][name] = true
 
   user name do
     action :unlock

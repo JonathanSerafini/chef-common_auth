@@ -1,33 +1,30 @@
-
 require 'secure_data_bag'
-
-namespaces = node[:common][:environments][:active]
 
 # Enqueue user and group items to manage
 # - managed: items that were managed during a previous run
 # - config: items that _may_ be managed during this run
 #
 user_queue = [
-  node[:common][:auth][:users][:managed],
-  node[:common][:auth][:users][:config].keys
+  node[:common_auth][:users][:managed],
+  node[:common_auth][:users][:config].keys
 ].flatten.compact.uniq
 
 group_queue = [
-  node[:common][:auth][:groups][:managed],
-  node[:common][:auth][:groups][:config].keys
+  node[:common_auth][:groups][:managed],
+  node[:common_auth][:groups][:config].keys
 ].flatten.compact.uniq
 
 # Fetch group data_bag items
 #
-groups = search(node[:common][:auth][:groups][:data_bag], "id:*").map do |item|
+groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
   # Apply databag namespace if present
   #
-  item = item.common_namespaced(namespaces)
+  item = Common::NamespacedHash.new(item.to_hash)
   item_name = item["name"] || item["id"]
 
   # Apply attribute override if present
   #
-  override = node[:common][:auth][:groups][:config].fetch(item_name, {})
+  override = node[:common_auth][:groups][:config].fetch(item_name, {})
   item = Chef::Mixin::DeepMerge.merge(item, override)
 
   # Ensure that this item is present in group_queue
@@ -53,16 +50,16 @@ end.compact
 
 # Fetch user data_bag items
 #
-users = search(node[:common][:auth][:users][:data_bag], "id:*").map do |item|
+users = search(node[:common_auth][:users][:data_bag], "id:*").map do |item|
   # Apply databag namespace if present
   #
-  item = SecureDataBag::Item.from_item item
-  item = item.common_namespaced(namespaces)
+  item = SecureDataBag::Item.from_item(item)
+  item = Common::NamespacedHash.new(item.to_hash)
   item_name = item["name"] || item["id"]
 
   # Apply attribute override if present
   #
-  override =  node[:common][:auth][:users][:config].fetch(item_name, {})
+  override =  node[:common_auth][:users][:config].fetch(item_name, {})
   item = Chef::Mixin::DeepMerge.merge(item, override)
 
   # Ensure that this item is present in user_queue
@@ -101,4 +98,3 @@ groups.each do |item|
     load_properties(item)
   end
 end
-
