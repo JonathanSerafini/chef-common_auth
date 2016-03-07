@@ -40,7 +40,7 @@ action :create do
   end
 
   sudo name do
-    load_properties(sudoer)
+    common_properties(sudoer)
     action :nothing if sudoer.empty?
   end
 end

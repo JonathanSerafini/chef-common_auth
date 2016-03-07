@@ -19,7 +19,7 @@ group_queue = [
 groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
   # Apply databag namespace if present
   #
-  item = Common::NamespacedHash.new(item.to_hash)
+  item = item.to_common_namespace
   item_name = item["name"] || item["id"]
 
   # Apply attribute override if present
@@ -54,7 +54,7 @@ users = search(node[:common_auth][:users][:data_bag], "id:*").map do |item|
   # Apply databag namespace if present
   #
   item = SecureDataBag::Item.from_item(item)
-  item = Common::NamespacedHash.new(item.to_hash)
+  item = teim.to_common_namespace
   item_name = item["name"] || item["id"]
 
   # Apply attribute override if present
@@ -80,7 +80,7 @@ end.compact
 #
 users.each do |item|
   user_account item["name"] || item["id"] do
-    load_properties(item)
+    commom_properties(item)
   end
 end
 
@@ -95,6 +95,6 @@ end
 #
 groups.each do |item|
   group_account item["name"] || item["id"] do
-    load_properties(item)
+    commom_properties(item)
   end
 end

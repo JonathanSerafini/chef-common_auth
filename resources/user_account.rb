@@ -64,7 +64,7 @@ action :create do
     owner new_resource.name
     group new_resource.name
     home  new_resource.home
-    load_properties(new_resource.keys)
+    common_properties(new_resource.keys)
     only_if { new_resource.manage_keys }
   end
 end
