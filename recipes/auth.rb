@@ -1,3 +1,5 @@
+# Install the secure_data_bag gem
+include_recipe "common_linux::packages"
 require 'secure_data_bag'
 
 # Enqueue user and group items to manage

@@ -6,5 +6,6 @@ description 'Installs/Configures chef_common_auth'
 long_description 'Installs/Configures chef_common_auth'
 version '0.1.2'
 
+depends 'common_linux'
 depends 'sudo'
 depends 'openssh'
