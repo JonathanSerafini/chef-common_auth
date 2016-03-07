@@ -1,5 +1,5 @@
 
-resource_name :group_account
+resource_name :common_group_account
 
 property :name,
   kind_of:  String,

@@ -1,5 +1,5 @@
 
-resource_name :user_keys
+resource_name :common_user_keys
 
 property :owner,
   kind_of:  String,

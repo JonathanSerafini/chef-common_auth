@@ -79,8 +79,8 @@ end.compact
 # Create user resources
 #
 users.each do |item|
-  user_account item["name"] || item["id"] do
-    commom_properties(item)
+  common_user_account item["name"] || item["id"] do
+    common_properties(item)
   end
 end
 
@@ -94,7 +94,7 @@ end
 # Create group resources
 #
 groups.each do |item|
-  group_account item["name"] || item["id"] do
-    commom_properties(item)
+  common_group_account item["name"] || item["id"] do
+    common_properties(item)
   end
 end

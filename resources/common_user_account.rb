@@ -1,5 +1,5 @@
 
-resource_name :user_account
+resource_name :common_user_account
 
 property :name,
   kind_of:  String,
@@ -60,7 +60,7 @@ action :create do
     manage_home new_resource.manage_home
   end
   
-  user_keys new_resource.name do
+  common_user_keys new_resource.name do
     owner new_resource.name
     group new_resource.name
     home  new_resource.home
