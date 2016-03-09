@@ -9,12 +9,12 @@ property :name,
 property :uid,
   kind_of:  Integer,
   identity: true,
-  coerce: proc { |value| value.to_i }
+  coerce:   proc { |value| value.to_i }
 
 property :gid,
   kind_of:  Integer,
   identity: true,
-  coerce: proc { |value| value.to_i }
+  coerce:   proc { |value| value.to_i }
 
 property :comment,
   kind_of:  String,
@@ -34,10 +34,12 @@ property :shell,
 
 property :password,
   kind_of:  String,
-  regex:    /^\$6\$/
+  regex:    /^\$6\$/,
+  coerce:   proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
 property :keys,
-  kind_of:  Hash
+  kind_of:  Hash,
+  coerce:   proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
 property :manage_home,
   kind_of: [TrueClass, FalseClass],

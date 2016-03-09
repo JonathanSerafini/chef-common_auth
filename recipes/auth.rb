@@ -1,5 +1,4 @@
 # Install the secure_data_bag gem
-include_recipe "common_linux::packages"
 require 'secure_data_bag'
 
 # Enqueue user and group items to manage
@@ -21,8 +20,9 @@ group_queue = [
 groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
   # Apply databag namespace if present
   #
-  item = item.to_common_namespace
   item_name = item["name"] || item["id"]
+  item = item.to_common_namespace
+  item["name"] ||= item_name
 
   # Apply attribute override if present
   #
@@ -31,8 +31,7 @@ groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
 
   # Ensure that this item is present in group_queue
   #
-  next if not group_queue.include?(item["name"]) and
-          not group_queue.include?(item["id"])
+  next if not group_queue.include?(item_name)
 
   # Set default action to :nothing if no action provided
   # - Perhaps this is only used to generate a list of users
@@ -56,7 +55,7 @@ users = search(node[:common_auth][:users][:data_bag], "id:*").map do |item|
   # Apply databag namespace if present
   #
   item = SecureDataBag::Item.from_item(item)
-  item = teim.to_common_namespace
+  item = item.to_common_namespace
   item_name = item["name"] || item["id"]
 
   # Apply attribute override if present

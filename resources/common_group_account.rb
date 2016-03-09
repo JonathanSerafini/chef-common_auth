@@ -41,7 +41,8 @@ action :create do
 
   sudo name do
     common_properties(sudoer)
-    action :nothing if sudoer.empty?
+    group name unless sudoer.key?("group")
+    action :nothing unless sudoer
   end
 end
 

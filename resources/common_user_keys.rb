@@ -8,7 +8,7 @@ property :owner,
 property :group,
   kind_of:  String,
   identity: true,
-  default: lazy { |r| r.owner }
+  default:  lazy { |r| r.owner }
 
 property :home,
   kind_of:  String,
@@ -17,11 +17,13 @@ property :home,
 
 property :public_keys,
   kind_of: Hash,
-  default: Hash.new
+  default: Hash.new,
+  coerce:  proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
 property :private_keys,
   kind_of: Hash,
-  default: Hash.new
+  default: Hash.new,
+  coerce:  proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
 action :create do
   directory "#{new_resource.home}/.ssh" do
@@ -34,6 +36,7 @@ action :create do
     owner new_resource.owner
     group new_resource.group
     mode  0600
+    sensitive true
     variables(
       public_keys: new_resource.public_keys
     )
