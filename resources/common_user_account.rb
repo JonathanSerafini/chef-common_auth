@@ -1,5 +1,5 @@
 
-resource_name :user_account
+resource_name :common_user_account
 
 property :name,
   kind_of:  String,
@@ -9,12 +9,12 @@ property :name,
 property :uid,
   kind_of:  Integer,
   identity: true,
-  coerce: proc { |value| value.to_i }
+  coerce:   proc { |value| value.to_i }
 
 property :gid,
   kind_of:  Integer,
   identity: true,
-  coerce: proc { |value| value.to_i }
+  coerce:   proc { |value| value.to_i }
 
 property :comment,
   kind_of:  String,
@@ -24,20 +24,22 @@ property :home,
   kind_of:  String,
   identity: true,
   default:  lazy { |r| 
-    ::File.join(node[:common][:auth][:users][:defaults][:home], "#{r.name}")
+    ::File.join(node[:common_auth][:users][:defaults][:home], "#{r.name}")
   }
 
 property :shell,
   kind_of:  String,
   identity: true,
-  default:  lazy { node[:common][:auth][:users][:defaults][:shell] }
+  default:  lazy { node[:common_auth][:users][:defaults][:shell] }
 
 property :password,
   kind_of:  String,
-  regex:    /^\$6\$/
+  regex:    /^\$6\$/,
+  coerce:   proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
 property :keys,
-  kind_of:  Hash
+  kind_of:  Hash,
+  coerce:   proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
 property :manage_home,
   kind_of: [TrueClass, FalseClass],
@@ -48,7 +50,7 @@ property :manage_keys,
   default: true
 
 action :create do
-  node.set[:common][:auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][name] = true
 
   user new_resource.name do
     uid       new_resource.uid
@@ -60,20 +62,20 @@ action :create do
     manage_home new_resource.manage_home
   end
   
-  user_keys new_resource.name do
+  common_user_keys new_resource.name do
     owner new_resource.name
     group new_resource.name
     home  new_resource.home
-    load_properties(new_resource.keys)
+    common_properties(new_resource.keys)
     only_if { new_resource.manage_keys }
   end
 end
 
 action :remove do
   if node[:etc][:passwd][name]
-    node.set[:common][:auth][:users][:managed][name] = false
+    node.set[:common_auth][:users][:managed][name] = false
   else
-    node.normal[:common][:auth][:users][:managed].delete(name)
+    node.normal[:common_auth][:users][:managed].delete(name)
   end
 
   user new_resource.name do
@@ -82,7 +84,7 @@ action :remove do
 end
 
 action :lock do
-  node.set[:common][:auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][name] = true
 
   user new_resource.name do
     action :lock
@@ -90,7 +92,7 @@ action :lock do
 end
 
 action :unlock do
-  node.set[:common][:auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][name] = true
 
   user name do
     action :unlock

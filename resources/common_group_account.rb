@@ -1,5 +1,5 @@
 
-resource_name :group_account
+resource_name :common_group_account
 
 property :name,
   kind_of:  String,
@@ -25,7 +25,7 @@ property :sudoer,
 action :create do
   # Register this managed group to support deletions
   #
-  node.set[:common][:auth][:groups][:managed][name] = true
+  node.set[:common_auth][:groups][:managed][name] = true
 
   if new_resource.require_members
     new_resource.members.each do |member|
@@ -40,16 +40,17 @@ action :create do
   end
 
   sudo name do
-    load_properties(sudoer)
-    action :nothing if sudoer.empty?
+    common_properties(sudoer)
+    group name unless sudoer.key?("group")
+    action :nothing unless sudoer
   end
 end
 
 action :remove do
   if node[:etc][:group][name]
-    node.set[:common][:auth][:groups][:managed][name] = false
+    node.set[:common_auth][:groups][:managed][name] = false
   else
-    node.normal[:common][:auth][:groups][:managed].delete(name)
+    node.normal[:common_auth][:groups][:managed].delete(name)
   end
 
   sudo name do

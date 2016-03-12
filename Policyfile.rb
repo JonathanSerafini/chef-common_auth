@@ -2,9 +2,9 @@
 name "common_auth"
 default_source :supermarket
 
-default[:common][:auth][:group][:managed][:kibana] = true
+default[:common_auth][:groups][:config][:devops] = true
 
-default[:common][:linux].tap do |config|
+default[:common_auth].tap do |config|
   config[:sudoers][:ubuntu].tap do |sudoer|
     sudoer[:user] = "ubuntu"
     sudoer[:runas] = "root"
@@ -18,8 +18,8 @@ default[:common][:linux].tap do |config|
     sudoer[:commands] = ["/usr/bin/chef-client"]
   end
 
-  config[:sudoers]["90-cloud-init-users"].tao do |sudoer|
-    sudoer[:action] = :remove
+  config[:sudoers]["90-cloud-init-users"].tap do |sudoer|
+    sudoer[:action] = "remove"
   end
 end
 
@@ -28,4 +28,6 @@ default[:openssh][:server][:allow_groups] = %w(devops deploy)
 
 run_list "common_auth::default"
 cookbook "common_auth", path: "."
-cookbook "common_utils", path: "../common_utils"
+cookbook "common_linux", path: "../common_linux"
+cookbook "common_attrs", path: "../common_attrs"
+cookbook "rsyslog_ng", path: "../rsyslog_ng"

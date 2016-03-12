@@ -1,0 +1,10 @@
+{
+  "id": "devops",
+  "include_members": true,
+  "members": ["testuser"],
+  "sudoer": {
+    "runas": "root",
+    "nopasswd": false
+  },
+  "action": "create"
+}
