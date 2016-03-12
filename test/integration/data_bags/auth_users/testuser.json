@@ -1,0 +1,14 @@
+{
+  "id": "testuser",
+  "name": "testuser",
+  "common": "Kitchen test user",
+  "shell": "/bin/bash",
+  "password": "$6$PASSWORD",
+  "keys": {
+    "public_keys": {
+      "primary": "ssh-rsa THISISAKEY"
+    }
+  },
+  "manage_home": true,
+  "action": "create"
+}
