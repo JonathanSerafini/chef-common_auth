@@ -5,13 +5,21 @@ require 'secure_data_bag'
 # - managed: items that were managed during a previous run
 # - config: items that _may_ be managed during this run
 #
-user_queue = [
-  node[:common_auth][:users][:managed],
+users_requested = [
   node[:common_auth][:users][:config].keys
 ].flatten.compact.uniq
 
-group_queue = [
-  node[:common_auth][:groups][:managed],
+users_managed = [
+  node[:common_auth][:users][:managed].keys,
+  node[:common_auth][:users][:config].keys
+].flatten.compact.uniq
+
+groups_requested = [
+  node[:common_auth][:groups][:config].keys
+].flatten.compact.uniq
+
+groups_managed = [
+  node[:common_auth][:groups][:managed].keys,
   node[:common_auth][:groups][:config].keys
 ].flatten.compact.uniq
 
@@ -29,9 +37,15 @@ groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
   override = node[:common_auth][:groups][:config].fetch(item_name, {})
   item = Chef::Mixin::DeepMerge.merge(item, override)
 
-  # Ensure that this item is present in group_queue
+  # Ensure that this item is meant to be managed
   #
-  next if not group_queue.include?(item_name)
+  next if not groups_managed.include?(item_name)
+
+  # Ensure that strays are deleted
+  #
+  if not groups_requested.include?(item_name)
+    item["action"] = "remove"
+  end
 
   # Set default action to :nothing if no action provided
   # - Perhaps this is only used to generate a list of users
@@ -40,8 +54,9 @@ groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
   # Enqueue group members 
   #
   if item["include_members"]
-    user_queue.concat(Array(item["members"]))
-    user_queue.uniq!
+    members = Array(item["members"])
+    users_requested.concat(members)
+    users_managed.concat(members)
   end
 
   # Return item
@@ -60,13 +75,18 @@ users = search(node[:common_auth][:users][:data_bag], "id:*").map do |item|
 
   # Apply attribute override if present
   #
-  override =  node[:common_auth][:users][:config].fetch(item_name, {})
+  override = node[:common_auth][:users][:config].fetch(item_name, {})
   item = Chef::Mixin::DeepMerge.merge(item, override)
 
-  # Ensure that this item is present in user_queue
+  # Ensure that this item is meant to be managed
   #
-  next if not user_queue.include?(item["name"]) and
-          not user_queue.include?(item["id"])
+  next if not users_managed.include?(item_name)
+
+  # Ensure that strays are deleted
+  #
+  if not users_requested.include?(item_name)
+    item["action"] = "remove"
+  end
 
   # Set default action to :nothing if no action provided
   #

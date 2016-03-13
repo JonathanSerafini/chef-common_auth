@@ -7,8 +7,8 @@ default[:common_auth][:groups][:data_bag] = "auth_groups"
 #
 default[:common_auth][:groups][:config] = Mash.new
 
-# Array containing a list of managed groups
+# Mash containing a list of managed groups
 # ** This should never be manually modified
 #
-default[:common_auth][:groups][:managed] = Array.new
+default[:common_auth][:groups][:managed] = Mash.new
 
