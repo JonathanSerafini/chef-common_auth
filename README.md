@@ -1,43 +1,63 @@
-# common_auth
+# common_auth cookbook
 
-A cookbook designed to apply users to machines by using a "group policy" sort of approach.
+A cookbook which will create users, group, sudoers and configure openssh with the design to be based on group policies. 
 
 # Requiremetns
 
-This cookbook requires *Chef 12.5.0* or later.
+This cookbook requires *Chef 12.7.0* or later.
 
 # Platform
 
-Ubuntu / AWS
+Ubuntu
+
+# Document
+
+Comments will be found throughout the attribute, resource and library files so that the documentation and code are more closely linked. What's found in this Readme will be more of a high-level overview.
 
 # Attributes
 
-- `common.auth.users.data_bag`: a data_bag containing encrypted data_bag_items for user_account resources. 
-- `common.auth.users.config`: a Hash containing `user_account` resource definitions or override values.
-- `common.auth.users.managed`: an Array of `user_account` names which are currently being managed on this node. As long as a `user_account` existed either at the beginning or the end of the chef run, the user will be listed in the Array. This Array is managed internally and *should not be editied* manually.
-- `common.auth.users.defaults`: default properties to apply to all user_account resources.
+The goal of this cookbook is to manage authentication related resources through a mixture of `node` attributes and `data_bag_item`. 
 
-- `common.auth.groups.data_bag`: a data_bag containing plain-text data_bag_items for group_account resources.
-- `common.auth.groups.config`: a Hash containing `group_account` resource definitions or override values.
-- `common.auth.groups.managed`: an Array of `group_account` names which are currently beging managed on this node. 
+## common_auth[:groups]
 
-- `common.sudoers`: a Hash containing `sudo` resource definitions.
+- data_bag: The data bag which contains group definitions
+- config: Hash of group_name => resource properties for attribute overrides
+- managed: Hash of users which have previously been managed (managed attribute)
+
+## common_auth[:users]
+
+- data_bag: The data bag which contains user definitions
+- config: Hash of user_name => resource properties for attribute overrides
+- managed: Hash of users which have previously been managed (managed attribute)
+- default: Hash of default user resource properties
+
+## common_auth[:sudoers]
+
+Hash containing suders resource definitions
+
+## common_auth[:openssh][:allow_groups]
+
+Hash of OpenSSH AllowGroup directives that will override the standard openssh cookbook attributes.
+
+## common_auth[:openssh][:match_groups]
+
+Hash of OpenSSH Match group statements
 
 # Resources
 
-## user_account
+### common_user_account
 
-A system / shell user account which wraps around the `user` builtin resource.
+Resource which will be responsible for creating a `user` resource and optionally a `common_user_keys` resource. Additionally, the creation or deletion of these attributes will be stored in `node` attributes to ensure that users are deleted if ommitted from configuration.
 
-## user_keys
+### common_user_keys
 
-A resource designed to create ssh public_keys, private_keys as well as ssh command wrappers.
+Resource which will manage a user's ssh public authorized_keys, ssh private rsa keys and will automatically create an ssh_wrapper script for each private key.
 
-## group_account
+### common_group_account
 
-A system / shell group account which wraps around the `group` builtin resource.
+Resource which will be responsible for creating a `group` resource and optinially a `sudoers` resource.
 
-# TODO
+# DataBag Formats
 
-- better integration of openssh AllowGroups
+DataBagItem formats should match the resource definitions for both `user` with an optional `keys` property matching `common_user_keys` as well as `group` items.
 
