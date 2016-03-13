@@ -1,7 +1,7 @@
 {
   "id": "testuser",
   "name": "testuser",
-  "common": "Kitchen test user",
+  "comment": "Kitchen test user",
   "shell": "/bin/bash",
   "password": "$6$PASSWORD",
   "keys": {
