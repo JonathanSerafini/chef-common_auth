@@ -25,6 +25,16 @@ property :private_keys,
   default: Hash.new,
   coerce:  proc { |value| Common::Delegator::ObfuscatedType.new(value) }
 
+# Ensure that the resource is applied regardless of whether we are in why_run
+# or standard mode.
+#
+# Refer to chef/chef#4537 for this uncommon syntax
+action_class do
+  def whyrun_supported?
+    true
+  end
+end
+
 action :create do
   directory "#{new_resource.home}/.ssh" do
     owner new_resource.owner
