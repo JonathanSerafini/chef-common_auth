@@ -49,6 +49,16 @@ property :manage_keys,
   kind_of: [TrueClass, FalseClass],
   default: true
 
+# Ensure that the resource is applied regardless of whether we are in why_run
+# or standard mode.
+#
+# Refer to chef/chef#4537 for this uncommon syntax
+action_class do
+  def whyrun_supported?
+    true
+  end
+end
+
 action :create do
   node.set[:common_auth][:users][:managed][name] = true
 

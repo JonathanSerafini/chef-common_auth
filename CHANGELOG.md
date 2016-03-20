@@ -1,6 +1,7 @@
 common_auth
 ======
 # 0.1.5
+* Add whyrun support to common_user_account
 * Add whyrun support to common_user_keys
 * Add whyrun support to common_group_account
 
