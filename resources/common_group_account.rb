@@ -22,16 +22,31 @@ property :sudoer,
   kind_of: Hash,
   default: Hash.new
 
+# Ensure that the resource is applied regardless of whether we are in why_run
+# or standard mode.
+#
+# Refer to chef/chef#4537 for this uncommon syntax
+action_class do
+  def whyrun_supported?
+    true
+  end
+end
+
 action :create do
   # Register this managed group to support deletions
   #
   node.set[:common_auth][:groups][:managed][name] = true
 
-  if new_resource.require_members
+  if new_resource.require_members and not whyrun_mode?
     new_resource.members.each do |member|
       next if node[:etc][:passwd].keys.include?(member)
       raise ArgumentError.new "This group requires the presence of #{member}"
     end
+  elsif whyrun_mode?
+    Chef.run_context.events.whyrun_assumption(:create,
+      new_resource,
+      "would ensure presence of members: #{new_resource.members.join(", ")}"
+    )
   end
 
   group name do
