@@ -40,6 +40,7 @@ action :create do
     owner new_resource.owner
     group new_resource.group
     mode  0700
+    recursive true
   end
 
   template "#{new_resource.home}/.ssh/authorized_keys2" do
@@ -53,22 +54,22 @@ action :create do
   end
 
   private_keys.each do |name, key|
-    file "#{new_resource.home}/.ssh/#{new_resource.name}.rsa" do
+    file "#{new_resource.home}/.ssh/#{name}.rsa" do
       owner new_resource.owner
       group new_resource.group
       mode  0600
       sensitive true
-      content new_resource.key
+      content key.to_s
     end
 
-    file "#{new_resource.home}/.ssh/#{new_resource.name}.cmd" do
+    file "#{new_resource.home}/.ssh/#{name}.cmd" do
       owner new_resource.owner
       group new_resource.group
       mode  0700
-      content "#!/bin/sh exec \
-        /usr/bin/ssh \
-          -i #{new_resource.home}/.ssh/#{new_resource.name}.rsa 
-          -o \"StrictHostKeyChecking=no\" \
+      content "#!/bin/sh
+        exec /usr/bin/ssh \\
+          -i #{new_resource.home}/.ssh/#{name}.rsa \\
+          -o \"StrictHostKeyChecking=no\" \\
           \"$@\"
       "
     end
