@@ -53,8 +53,8 @@ action :create do
     )
   end
 
-  private_keys.each do |name, key|
-    file "#{new_resource.home}/.ssh/#{name}.rsa" do
+  new_resource.private_keys.each do |name, key|
+    file "#{new_resource.home}/.ssh/#{new_resource.name}.rsa" do
       owner new_resource.owner
       group new_resource.group
       mode  0600
@@ -62,13 +62,13 @@ action :create do
       content key.to_s
     end
 
-    file "#{new_resource.home}/.ssh/#{name}.cmd" do
+    file "#{new_resource.home}/.ssh/#{new_resource.name}.cmd" do
       owner new_resource.owner
       group new_resource.group
       mode  0700
       content "#!/bin/sh
         exec /usr/bin/ssh \\
-          -i #{new_resource.home}/.ssh/#{name}.rsa \\
+          -i #{new_resource.home}/.ssh/#{new_resource.name}.rsa \\
           -o \"StrictHostKeyChecking=no\" \\
           \"$@\"
       "
@@ -81,7 +81,7 @@ action :delete do
     action :delete
   end
 
-  private_keys.keys.each do |name|
+  new_resource.private_keys.keys.each do |name|
     file "#{new_resource.home}/.ssh/#{new_resource.name}.rsa" do
       action :delete
     end
