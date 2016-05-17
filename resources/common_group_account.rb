@@ -57,7 +57,7 @@ action :create do
   sudo new_resource.name do
     common_properties(new_resource.sudoer)
     group new_resource.name unless new_resource.sudoer.key?("group")
-    action :nothing unless sudoer
+    action :remove if new_resource.sudoer.empty?
   end
 end
 
