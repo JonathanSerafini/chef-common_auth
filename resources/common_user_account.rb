@@ -60,7 +60,7 @@ action_class do
 end
 
 action :create do
-  node.set[:common_auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][new_resource.name] = true
 
   user new_resource.name do
     uid       new_resource.uid
@@ -82,10 +82,10 @@ action :create do
 end
 
 action :remove do
-  if node[:etc][:passwd][name]
-    node.set[:common_auth][:users][:managed][name] = false
+  if node[:etc][:passwd][new_resource.name]
+    node.set[:common_auth][:users][:managed][new_resource.name] = false
   else
-    node.normal[:common_auth][:users][:managed].delete(name)
+    node.normal[:common_auth][:users][:managed].delete(new_resource.name)
   end
 
   user new_resource.name do
@@ -94,7 +94,7 @@ action :remove do
 end
 
 action :lock do
-  node.set[:common_auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][new_resource.name] = true
 
   user new_resource.name do
     action :lock
@@ -102,9 +102,9 @@ action :lock do
 end
 
 action :unlock do
-  node.set[:common_auth][:users][:managed][name] = true
+  node.set[:common_auth][:users][:managed][new_resource.name] = true
 
-  user name do
+  user new_resource.name do
     action :unlock
   end
 end

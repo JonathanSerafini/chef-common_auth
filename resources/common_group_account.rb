@@ -35,7 +35,7 @@ end
 action :create do
   # Register this managed group to support deletions
   #
-  node.set[:common_auth][:groups][:managed][name] = true
+  node.set[:common_auth][:groups][:managed][new_resource.name] = true
 
   if new_resource.require_members and not whyrun_mode?
     new_resource.members.each do |member|
@@ -49,30 +49,30 @@ action :create do
     )
   end
 
-  group name do
-    gid gid
-    members members
+  group new_resource.name do
+    gid new_resource.gid
+    members new_resource.members
   end
 
-  sudo name do
-    common_properties(sudoer)
-    group name unless sudoer.key?("group")
+  sudo new_resource.name do
+    common_properties(new_resource.sudoer)
+    group new_resource.name unless new_resource.sudoer.key?("group")
     action :nothing unless sudoer
   end
 end
 
 action :remove do
-  if node[:etc][:group][name]
-    node.set[:common_auth][:groups][:managed][name] = false
+  if node[:etc][:group][new_resource.name]
+    node.set[:common_auth][:groups][:managed][new_resource.name] = false
   else
-    node.normal[:common_auth][:groups][:managed].delete(name)
+    node.normal[:common_auth][:groups][:managed].delete(new_resource.name)
   end
 
-  sudo name do
+  sudo new_resource.name do
     action :remove
   end
 
-  group name do
+  group new_resource.name do
     action :remove
   end
 end
