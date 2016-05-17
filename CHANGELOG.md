@@ -1,5 +1,8 @@
 common_auth
 ======
+# 0.1.7
+* Resolve a problem in the custom resources where soem values ( ex.: group memberships ) would never be populated.
+
 # 0.1.6
 * Enhancement
   * Resolve Chef13 warning with secure_data_bag
