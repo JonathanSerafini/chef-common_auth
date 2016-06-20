@@ -59,6 +59,10 @@ groups = search(node[:common_auth][:groups][:data_bag], "id:*").map do |item|
     users_managed.concat(members)
   end
 
+  # Remove unsupported keys
+  #
+  item.delete("include_members")
+
   # Return item
   #
   item
