@@ -1,5 +1,9 @@
 common_auth
 ======
+
+# 0.1.8
+* Remove common_group_account warning when passed include_members
+
 # 0.1.7
 * Resolve a problem in the custom resources where soem values ( ex.: group memberships ) would never be populated.
 
