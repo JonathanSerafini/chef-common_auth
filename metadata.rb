@@ -11,6 +11,6 @@ version '0.1.9'
 
 gem 'secure_data_bag'   # Support more data_bag_item formats
 
-depends 'common_attrs'  '~> 0.4.0'
+depends 'common_attrs', '~> 0.4.0'
 depends 'sudo',         '~> 2.9.0'
 depends 'openssh',      '~> 2.0.0'
