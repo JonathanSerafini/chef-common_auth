@@ -1,6 +1,9 @@
 common_auth
 ======
 
+# 0.1.9
+* Resolve error in creating of private id keys and ssh wrappers where all keys created with username rather than keyname
+
 # 0.1.8
 * Remove common_group_account warning when passed include_members
 
