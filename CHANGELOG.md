@@ -1,6 +1,9 @@
 common_auth
 ======
 
+# 0.2.0
+* metadata missing comma nothing errors why
+
 # 0.1.9
 * Resolve error in creating of private id keys and ssh wrappers where all keys created with username rather than keyname
 
