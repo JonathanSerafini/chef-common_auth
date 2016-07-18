@@ -35,7 +35,7 @@ end
 action :create do
   # Register this managed group to support deletions
   #
-  node.set[:common_auth][:groups][:managed][new_resource.name] = true
+  node.normal[:common_auth][:groups][:managed][new_resource.name] = true
 
   if new_resource.require_members and not whyrun_mode?
     new_resource.members.each do |member|

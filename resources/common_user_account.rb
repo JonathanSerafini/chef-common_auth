@@ -60,7 +60,7 @@ action_class do
 end
 
 action :create do
-  node.set[:common_auth][:users][:managed][new_resource.name] = true
+  node.normal[:common_auth][:users][:managed][new_resource.name] = true
 
   user new_resource.name do
     uid       new_resource.uid
