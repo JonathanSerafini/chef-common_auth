@@ -7,7 +7,7 @@ license 'apachev2'
 description 'Resources to help manage Linux users, groups, sudo and openssh'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 chef_version '>= 12.7'
-version '0.2.0'
+version '0.2.1'
 
 gem 'secure_data_bag'   # Support more data_bag_item formats
 

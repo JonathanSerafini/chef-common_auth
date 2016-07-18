@@ -1,6 +1,9 @@
 common_auth
 ======
 
+# 0.2.1
+* Resolve Chef 14 deprecation warning
+
 # 0.2.0
 * metadata missing comma nothing errors why
 
