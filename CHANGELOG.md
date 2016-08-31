@@ -1,6 +1,10 @@
 common_auth
 ======
 
+# 0.3.0
+* Migrate logic from recipes/auth to library DSL methods
+* Add additional common\_auth.users.search_user_memberships option
+
 # 0.2.1
 * Resolve Chef 14 deprecation warning
 
