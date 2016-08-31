@@ -1,5 +1,5 @@
 {
-  "revision_id": "19f5325c52f2ff5efa045fd8467610a6b9f62ac010f5e0d36b8247cc18830e7f",
+  "revision_id": "41103baacaf07ccdaab15d5a2405a1db5ea651830dadf24be4fec403959ccc88",
   "name": "common_auth",
   "run_list": [
     "recipe[common_auth::default]"
@@ -7,18 +7,18 @@
   "cookbook_locks": {
     "common_auth": {
       "version": "0.3.0",
-      "identifier": "de00e89a5fc1fef288f9f74840ecaf418940f424",
-      "dotted_decimal_identifier": "62488443852145150.68267551540920556.192696010470436",
+      "identifier": "676baa2326442263f2ff8eebf573b6a6d8eda45b",
+      "dotted_decimal_identifier": "29110301079520290.28133202122765683.200827720279131",
       "source": ".",
       "cache_key": null,
       "scm_info": {
         "scm": "git",
-        "remote": null,
-        "revision": "272437e590b4cdc7581e3400aefde348ff67a786",
+        "remote": "git@github.com:JonathanSerafini/chef-common_auth.git",
+        "revision": "4805472e7318d9849d8b33e17bbcd6003d4f59b1",
         "working_tree_clean": false,
-        "published": false,
+        "published": true,
         "synchronized_remote_branches": [
-
+          "origin/v0.3.0"
         ]
       },
       "source_options": {
